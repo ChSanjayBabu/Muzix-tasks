@@ -16,8 +16,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import static springfox.documentation.builders.PathSelectors.regex;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
 
 
 @EnableAutoConfiguration

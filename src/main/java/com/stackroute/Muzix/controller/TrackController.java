@@ -14,7 +14,8 @@ import java.util.List;
 @RequestMapping(value="api/v1")
 public class TrackController {
 
-    TrackService trackService;
+    private ResponseEntity responseEntity;
+    private TrackService trackService;
 
     @Autowired
     @Qualifier("trackDummyServiceImpl")
@@ -23,60 +24,40 @@ public class TrackController {
         trackService.serviceUsed();
     }
 
-    @PostMapping("save")
+    @PostMapping("track")
     public ResponseEntity<?> saveTrack(@RequestBody Track track) throws Exception
     {
-        ResponseEntity responseEntity;
-            if(trackService.saveTrack(track)==null)
-                throw new Exception("TrackAlreadyExists");
-            responseEntity= new ResponseEntity<String>("successfully created", HttpStatus.CREATED);
+
+        trackService.saveTrack(track);
+        responseEntity= new ResponseEntity<String>("successfully created", HttpStatus.CREATED);
         return responseEntity;
     }
-    @GetMapping("/display")
+    @GetMapping("/tracks")
     public ResponseEntity<?> getAllTrack()
     {
         return new ResponseEntity<List<Track>>(trackService.getAllTrack(),HttpStatus.OK);
     }
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteTrack(@RequestBody Track track)
+    @DeleteMapping("/track")
+    public ResponseEntity<?> deleteTrack(@RequestBody Track track) throws Exception
     {
-        ResponseEntity responseEntity;
-        try
-        {
-            trackService.deleteTrack(track.getTrackId());
-            responseEntity= new ResponseEntity<String>("successfully deleted", HttpStatus.OK);;
-        }
-        catch (Exception e)
-        {
-            responseEntity =new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
-        }
+
+        ResponseEntity<String> responseEntity = new ResponseEntity<String>("Succesfully deleted"+trackService.deleteTrack(track.getTrackId()), HttpStatus.GONE);
         return responseEntity;
     }
-    @PutMapping("/update")
+    @PutMapping("/track")
     public ResponseEntity<?> updateTrack(@RequestBody Track track)
     {
-        ResponseEntity responseEntity;
-        try
-        {
             trackService.updateTrack(track);
-            responseEntity= new ResponseEntity<String>("successfully updated", HttpStatus.CREATED);
-        }
-        catch (Exception e)
-        {
-            responseEntity =new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
-        }
+            responseEntity= new ResponseEntity<String>("successfully updated", HttpStatus.ACCEPTED);
         return responseEntity;
     }
-    @GetMapping("search/{name}")
+    @GetMapping("track/{name}")
     public ResponseEntity<?> searchTrack(@PathVariable String name) throws Exception
     {
         ResponseEntity responseEntity;
-            if(trackService.trackByName(name) ==  null)
-                throw new Exception("TrackNotFoundException");
-            responseEntity =new ResponseEntity<String>("Search found",HttpStatus.CONFLICT);
+        trackService.trackByName(name);
+        responseEntity =new ResponseEntity<String>("Search found",HttpStatus.FOUND);
         return responseEntity;
     }
-
-
 
 }

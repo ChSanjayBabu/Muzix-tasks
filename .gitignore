@@ -1,4 +1,7 @@
 HELP.md
+mvnw
+mvnw.cmd
+.mvn*
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
@@ -101,6 +104,7 @@ local.properties
 *.war
 *.ear
 *.db
+
 ######################
 # Windows
 ######################

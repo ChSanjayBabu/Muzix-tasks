@@ -23,9 +23,9 @@ public class TrackDummyServiceImpl implements TrackService{
     }
 
     @Override
-    public Track saveTrack(Track track){
+    public Track saveTrack(Track track) throws Exception{
         if(trackRepository.existsById(track.getTrackId()))
-            return null;
+            throw new Exception("TrackAlreadyExists");
         Track savedTrack =trackRepository.save(track);
         return savedTrack;
     }
@@ -42,14 +42,19 @@ public class TrackDummyServiceImpl implements TrackService{
     }
 
     @Override
-    public void deleteTrack(int trackId) {
-        trackRepository.deleteById(trackId);
+    public Track deleteTrack(int trackId) throws Exception{
+        if(trackRepository.findById(trackId)==null)
+        {
+            throw new Exception("TrackNotFoundException");
+        }
+        else
+            return trackRepository.getOne(trackId);
     }
     @Override
-    public List<Track> trackByName(String trackName) {
+    public List<Track> trackByName(String trackName) throws Exception{
         List<Track> tracks = trackRepository.getTrackByName(trackName);
         if(tracks.size()==0)
-            return null;
+            throw new Exception("TrackNotFoundException");
         else
             return tracks;
     }
